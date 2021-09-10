@@ -1,58 +1,34 @@
+# aws-csv-processor
 
-# Welcome to your CDK Python project!
+## Pre-requisites
 
-This is a blank project for Python development with CDK.
+## Setting up AWS account
+* Create user with sufficient privileges for deployment
+* CDK bootstrap `cdk bootstrap`
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+## Local development
+### Prerequisites
+* AWS CDK installed
+* Python 3.6+ installed
+* Python venv installed
+* Docker installed (we're using a construct for Lambda which requires this locally)
+* AWS credentials configured
 
-This project is set up like a standard Python project.  The initialization
-process also creates a virtualenv within this project, stored under the `.venv`
-directory.  To create the virtualenv it assumes that there is a `python3`
-(or `python` for Windows) executable in your path with access to the `venv`
-package. If for any reason the automatic creation of the virtualenv fails,
-you can create the virtualenv manually.
+### Python venv setup
+* Be in root folder of this repo
+* `python3 -m venv .venv`
+* `source .venv/bin/activate`
+* `pip install -r requirements.txt`
+* You're now running in your local dev environment
 
-To manually create a virtualenv on MacOS and Linux:
+### Pre-commit hooks
+Pre-commmit hooks are used to ensure quality of committed code. Documentation for this can be found here: https://pre-commit.com/
+Pre-commit configuration can be found in `.pre-commit-config.yaml`
 
-```
-$ python3 -m venv .venv
-```
+This can also be run manually to check all files from within the venv: `pre-commit run --all-files`
 
-After the init process completes and the virtualenv is created, you can use the following
-step to activate your virtualenv.
-
-```
-$ source .venv/bin/activate
-```
-
-If you are a Windows platform, you would activate the virtualenv like this:
-
-```
-% .venv\Scripts\activate.bat
-```
-
-Once the virtualenv is activated, you can install the required dependencies.
-
-```
-$ pip install -r requirements.txt
-```
-
-At this point you can now synthesize the CloudFormation template for this code.
-
-```
-$ cdk synth
-```
-
-To add additional dependencies, for example other CDK libraries, just add
-them to your `setup.py` file and rerun the `pip install -r requirements.txt`
-command.
-
-## Useful commands
-
- * `cdk ls`          list all stacks in the app
- * `cdk synth`       emits the synthesized CloudFormation template
- * `cdk deploy`      deploy this stack to your default AWS account/region
- * `cdk diff`        compare deployed stack with current state
- * `cdk docs`        open CDK documentation
-
-Enjoy!
+### Deploying from local
+* NOTE - `cdk bootstrap` needs to have been run first for this to work
+* Run `cdk synth` to check that cdk setup is valid
+* Run `cdk deploy` to deploy using the AWS credentials you have configured.
+** If using a profile then do `cdk deploy --profile {profile_name}`

@@ -1,1 +1,8 @@
 -e .
+aws-cdk.aws-dynamodb==1.122.0
+aws-cdk.aws-iam==1.122.0
+aws-cdk.aws-lambda==1.122.0
+aws-cdk.aws-lambda-event-sources==1.122.0
+aws-cdk.aws-lambda-python==1.122.0
+aws-cdk.aws-s3==1.122.0
+pre-commit==2.15.0
