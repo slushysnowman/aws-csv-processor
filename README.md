@@ -101,3 +101,15 @@ This can also be run manually to check all files from within the venv: `pre-comm
 * Run `cdk synth` to check that cdk setup is valid
 * Run `cdk deploy` to deploy using the AWS credentials you have configured.
 ** If using a profile then do `cdk deploy --profile {profile_name}`
+
+
+## Testing the functionality
+
+Hopefully any CSV can be used to test the functionality, with 3 conditions:
+* The CSV must be comma-separated
+* The CSV must have named columns
+* One of the columns must be named 'customer_id'
+
+Samples that can be used for testing can be found in sample-csvs:
+sample-csvs/sample-bad.csv - this one will fail
+sample-csvs/sample-good.csv - this one will work
