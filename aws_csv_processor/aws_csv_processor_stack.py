@@ -7,6 +7,7 @@ from aws_cdk import (
     aws_dynamodb as dynamodb,
     aws_lambda_event_sources as lambda_event_sources,
     aws_logs as logs,
+    aws_cloudwatch as cloudwatch,
 )
 
 
@@ -14,7 +15,6 @@ class AwsCsvProcessorStack(cdk.Stack):
     def __init__(self, scope: cdk.Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
-        # TODO define account wide public access block
         csv_bucket = s3.Bucket(
             self,
             "csvBucket",
@@ -32,11 +32,27 @@ class AwsCsvProcessorStack(cdk.Stack):
             self,
             "csvProcessor",
             function_name="csvProcessor",
-            entry="./lambda/csv-processor",
+            entry="./lambda_functions/csv_processor",
             index="processor.py",
             handler="handler",
             runtime=lambda_.Runtime.PYTHON_3_9,
             log_retention=logs.RetentionDays.ONE_WEEK,
+        )
+
+        # No action defined as I didn't have time to setup a proper alert receiver
+        cloudwatch.Alarm(
+            self,
+            "csvProcessorAlarmErrors",
+            metric=csv_processor_function.metric_errors(),
+            evaluation_periods=1,
+            threshold=0,
+            actions_enabled=True,
+            alarm_name="csv-processor-errors",
+            comparison_operator=cloudwatch.ComparisonOperator.GREATER_THAN_THRESHOLD,
+            datapoints_to_alarm=1,
+            period=cdk.Duration.seconds(60),
+            statistic="Sum",
+            treat_missing_data=cloudwatch.TreatMissingData.IGNORE,
         )
 
         csv_bucket_event_source = lambda_event_sources.S3EventSource(
@@ -54,7 +70,7 @@ class AwsCsvProcessorStack(cdk.Stack):
             "csvStorageTable",
             table_name="csvStorageTable",
             partition_key=dynamodb.Attribute(
-                name="csvId", type=dynamodb.AttributeType.STRING
+                name="customer_id", type=dynamodb.AttributeType.STRING
             ),
             billing_mode=dynamodb.BillingMode.PAY_PER_REQUEST,
             removal_policy=cdk.RemovalPolicy.DESTROY,
